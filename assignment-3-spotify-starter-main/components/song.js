@@ -1,39 +1,61 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, Pressable } from 'react-native';
 import millisToMinutesAndSeconds from '../utils/millisToMinutesAndSeconds.js'
+import { Ionicons } from '@expo/vector-icons';
+import Themes from '../assets/Themes/themes.js';
+
 
 export default function Song(props) {
     //PROPS
     //index, album img, album title, song title, artist, duration
+    console.log(props);
     return (
         <View style={styles.songContainer}>
-                <View style={styles.indexNumberWrapper}>
-                    <Text style={styles.indexNumber}>
-                        {props.track.key}
-                    </Text>
+                <View style={styles.playButtonWrapper}>
+                    <Pressable 
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        props.nav.navigate('Preview', {
+                          url: props.track.preview_url,
+                        });
+                      }}
+                    >
+                      <Ionicons name="play-circle" size={24} color={Themes.colors.spotify} />
+                    </Pressable>
                 </View>
-                <Image 
-                    source={{uri: props.track.album.images[1].url}}
-                    style={styles.albumImage}
-                />
-                <View style={styles.nameContainer}>
-                    <Text style={styles.songTitle} numberOfLines={1}>
-                        {props.track.name}
-                    </Text>
-                    <Text style={styles.artistName} numberOfLines={1}>
-                        {props.track.artists[0].name}
-                    </Text>
-                </View>
-                <Text style={styles.albumName} numberOfLines={1}>
-                    {props.track.album.name}
-                </Text>
-                <Text style={styles.duration}>
-                    {millisToMinutesAndSeconds(props.track.duration_ms)}
-                </Text>
+                  <Image 
+                      source={{uri: props.track.album.images[1].url}}
+                      style={styles.albumImage}
+                  />
+                  <Pressable 
+                    style={styles.nameContainer}
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      props.nav.navigate('Details', {
+                        url: props.track.external_urls.spotify,
+                      });
+                    }}
+                  >
+                      <Text style={styles.songTitle} numberOfLines={1}>
+                          {props.track.name}
+                      </Text>
+                      <Text style={styles.artistName} numberOfLines={1}>
+                          {props.track.artists[0].name}
+                      </Text>
+                  </Pressable>
+                  <Text style={styles.albumName} numberOfLines={1}>
+                      {props.track.album.name}
+                  </Text>
+                  <Text style={styles.duration}>
+                      {millisToMinutesAndSeconds(props.track.duration_ms)}
+                  </Text>
         </View>
     );
 }
 const styles = StyleSheet.create({
+  playButtonWrapper: {
+    marginRight: 8,
+  },
   songContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -59,10 +81,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     width: '80%',
     width: 125,
-  },
-  indexNumber: {
-    color: 'rgba(255,255,255, 0.7)',
-    fontSize: 12,
   },
   indexNumberWrapper: {
     marginRight: 4,

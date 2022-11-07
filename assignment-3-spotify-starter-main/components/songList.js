@@ -11,6 +11,7 @@ export default function SongList(props) {
                 renderItem={({ item }) => (
                     <Song
                         track={item}
+                        nav={props.nav}
                     />
                 )}
             />
